@@ -1,0 +1,10 @@
+server:
+  port: 3033
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/commenting
+    username: postgres
+    password: rheasp@3_238
