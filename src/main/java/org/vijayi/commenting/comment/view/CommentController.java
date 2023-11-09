@@ -11,6 +11,7 @@ import org.vijayi.commenting.comment.repository.model.Comment;
 import org.vijayi.commenting.comment.service.CommentService;
 import org.vijayi.commenting.comment.view.model.request.AddCommentRequestBody;
 import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
+import org.vijayi.commenting.user.exceptions.UserNotInDbException;
 
 @RestController
 public class CommentController {
@@ -29,8 +30,9 @@ public class CommentController {
         try {
             Comment comment = commentService.addComment(addCommentRequestBody);
         } catch (InvalidUserNameException ex) {
-//            return "Invalid Request";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Request"+"\n Error: "+ ex.getMessage());
+        } catch (UserNotInDbException ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid Request" + "\n Error: "+ ex.getMessage());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Comment Added");
     }

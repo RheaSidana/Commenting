@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.vijayi.commenting.comment.service.CommentServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-09T11:54:00" hostname="DESKTOP-BFNHOD6" time="2.186">
+<testsuite name="org.vijayi.commenting.comment.service.CommentServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-09T19:30:46" hostname="DESKTOP-BFNHOD6" time="2.898">
   <properties/>
-  <testcase name="shouldNotAddCommentWhenInvalidUserName()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="2.173"/>
-  <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.011"/>
-  <system-out><![CDATA[]]></system-out>
+  <testcase name="shouldNotAddCommentWhenInvalidUserName()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="2.838"/>
+  <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.03"/>
+  <testcase name="shouldAddCommentWhenUserNotInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.026"/>
+  <system-out><![CDATA[PostedBy: user not found
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
