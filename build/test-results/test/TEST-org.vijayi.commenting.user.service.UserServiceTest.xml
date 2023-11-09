@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.vijayi.commenting.user.service.UserServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-11-09T11:54:02" hostname="DESKTOP-BFNHOD6" time="0.011">
+  <properties/>
+  <testcase name="shouldNotIsValidUserNameWhenEmpty()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
+  <testcase name="shouldIsValidUserName()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
+  <testcase name="shouldNotIsValidUserNameWhenSpecialChar()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
+  <testcase name="shouldNotIsValidUserNameWhenHasNumber()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
+  <testcase name="shouldNotIsValidUserNameWhenSymbol()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

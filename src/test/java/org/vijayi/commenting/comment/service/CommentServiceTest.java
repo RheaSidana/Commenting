@@ -22,7 +22,7 @@ class CommentServiceTest {
         assertEquals(mockUser, mockAddCommentRequestBody.getPostedBy());
 
         InvalidUserNameException invalidUserNameException = assertThrows(InvalidUserNameException.class, () -> new CommentService(mockUserService).addComment(mockAddCommentRequestBody));
-        assertEquals("Invalid User name provided", invalidUserNameException.getMessage());
+        assertEquals("PostedBy: invalid name provided", invalidUserNameException.getMessage());
 
         verify(mockUserService).isValidUserName(mockAddCommentRequestBody.getPostedBy());
         assertFalse(mockUserService.isValidUserName(mockUser));

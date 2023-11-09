@@ -3,6 +3,7 @@ package org.vijayi.commenting.comment.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vijayi.commenting.comment.repository.CommentRepository;
+import org.vijayi.commenting.comment.repository.model.Comment;
 import org.vijayi.commenting.comment.view.model.request.AddCommentRequestBody;
 import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
 import org.vijayi.commenting.user.service.UserService;
@@ -30,12 +31,13 @@ public class CommentService {
     }
 
     @Transactional
-    public void addComment(AddCommentRequestBody addCommentRequestBody) throws InvalidUserNameException {
-        boolean isValidUserName = userService.isValidUserName(addCommentRequestBody.getPostedBy());
+    public Comment addComment(AddCommentRequestBody addCommentRequestBody) throws InvalidUserNameException {
+        boolean isValidUserName_PostedBy = userService.isValidUserName(addCommentRequestBody.getPostedBy());
 
-        if(!isValidUserName) {
-            throw new InvalidUserNameException("Invalid User name provided");
+        if(!isValidUserName_PostedBy) {
+            throw new InvalidUserNameException("PostedBy: invalid name provided");
         }
 //        userService.isAvailableInDb(addCommentRequestBody.getPostedBy());
+        return new Comment();
     }
 }
