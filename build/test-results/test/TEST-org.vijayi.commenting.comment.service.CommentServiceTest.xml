@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.vijayi.commenting.comment.service.CommentServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-11-09T10:18:06" hostname="DESKTOP-BFNHOD6" time="1.083">
+  <properties/>
+  <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="1.083"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
