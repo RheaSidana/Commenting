@@ -100,4 +100,33 @@ class UserServiceTest {
         verify(mockUserRepo).findByName(mockUser.getName(), mockUser.getId());
         assertEquals(Optional.of(mockUser), mockUserRepo.findByName(mockUser.getName(), mockUser.getId()));
     }
+
+    @Test
+    public void shouldNotAddUserToDb() {
+        UserRepository mockUserRepo = mock(UserRepository.class);
+        User mockUser = mock(User.class);
+        String username = "TempoName";
+        when(mockUser.getName()).thenReturn(username);
+        when(mockUserRepo.save(any())).thenReturn(null);
+        UserService userService = new UserService(mockUserRepo);
+
+        User user = userService.addUserToDb(mockUser);
+
+        assertNull(user);
+    }
+
+    @Test
+    public void shouldAddUserToDb() {
+        UserRepository mockUserRepo = mock(UserRepository.class);
+        User mockUser = mock(User.class);
+        String username = "TempoName";
+        when(mockUser.getName()).thenReturn(username);
+        when(mockUserRepo.save(any())).thenReturn(mockUser);
+        UserService userService = new UserService(mockUserRepo);
+
+        User user = userService.addUserToDb(mockUser);
+
+//        assertNotNull(user);
+        assertEquals(mockUser, user);
+    }
 }

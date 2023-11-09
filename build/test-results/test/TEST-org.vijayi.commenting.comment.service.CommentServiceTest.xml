@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.vijayi.commenting.comment.service.CommentServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-09T19:30:46" hostname="DESKTOP-BFNHOD6" time="2.898">
+<testsuite name="org.vijayi.commenting.comment.service.CommentServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-11-09T22:03:07" hostname="DESKTOP-BFNHOD6" time="2.217">
   <properties/>
-  <testcase name="shouldNotAddCommentWhenInvalidUserName()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="2.838"/>
-  <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.03"/>
-  <testcase name="shouldAddCommentWhenUserNotInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.026"/>
-  <system-out><![CDATA[PostedBy: user not found
+  <testcase name="shouldAddCommentWhenUnableToAddInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="2.154"/>
+  <testcase name="shouldNotAddCommentWhenInvalidUserName()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.017"/>
+  <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.022"/>
+  <testcase name="shouldAddCommentWhenUserNotInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.018"/>
+  <system-out><![CDATA[PostedFor: unable to add user to db
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

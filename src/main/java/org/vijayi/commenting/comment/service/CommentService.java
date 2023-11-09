@@ -1,12 +1,15 @@
 package org.vijayi.commenting.comment.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vijayi.commenting.comment.repository.CommentRepository;
 import org.vijayi.commenting.comment.repository.model.Comment;
 import org.vijayi.commenting.comment.view.model.request.AddCommentRequestBody;
 import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
+import org.vijayi.commenting.user.exceptions.UnableToAddUserToDbException;
 import org.vijayi.commenting.user.exceptions.UserNotInDbException;
+import org.vijayi.commenting.user.repository.model.User;
 import org.vijayi.commenting.user.service.UserService;
 
 import javax.transaction.Transactional;
@@ -32,7 +35,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment addComment(AddCommentRequestBody addCommentRequestBody) throws InvalidUserNameException, UserNotInDbException {
+    public Comment addComment(AddCommentRequestBody addCommentRequestBody) throws InvalidUserNameException, UserNotInDbException, UnableToAddUserToDbException {
         boolean isValidUserNamePostedBy = userService.isValidUserName(addCommentRequestBody.getPostedBy());
         if(!isValidUserNamePostedBy) {
             throw new InvalidUserNameException("PostedBy: invalid name provided");
@@ -48,11 +51,20 @@ public class CommentService {
             throw new InvalidUserNameException("PostedFor: invalid name provided");
         }
 
-//        boolean availableInDbPostedFor = userService.isAvailableInDb(addCommentRequestBody.getPostedFor());
-//        if(!availableInDbPostedFor){
-//
-//        }
+        User user = addCommentRequestBody.getPostedFor();
+        boolean availableInDbPostedFor = userService.isAvailableInDb(user);
+        if(!availableInDbPostedFor){
+            user = userService.addUserToDb(user);
+            if(user == null){
+                throw new UnableToAddUserToDbException("PostedFor: unable to add user to db");
+            }
+        }
 
-        return new Comment();
+        Comment comment = new Comment();
+        comment.setPostedBy(addCommentRequestBody.getPostedBy());
+        comment.setPostedFor(user);
+        comment.setMessage(addCommentRequestBody.getMessage());
+
+        return comment;
     }
 }

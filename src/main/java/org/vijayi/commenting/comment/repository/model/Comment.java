@@ -98,12 +98,12 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", message='" + message + '\'' +
-                ", dateTime=" + dateTime +
-                ", postedBy=" + postedBy +
-                ", postedFor=" + postedFor +
+        return "Comment{" + "\n" +
+                "id=" + id + "\n" +
+                ", message='" + message + '\'' + "\n" +
+                ", dateTime=" + dateTime + "\n" +
+                ", postedBy=" + postedBy + "\n" +
+                ", postedFor=" + postedFor + "\n" +
                 '}';
     }
 }

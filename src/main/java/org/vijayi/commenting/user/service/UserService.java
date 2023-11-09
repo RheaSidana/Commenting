@@ -29,4 +29,12 @@ public class UserService {
         }
         return userRepository.findByName(user.getName(), user.getId()).isPresent();
     }
+
+    public User addUserToDb(User user){
+        User userToAddInDb = new User();
+        userToAddInDb.setName(user.getName());
+
+        User userCreated = userRepository.save(userToAddInDb);
+        return userCreated;
+    }
 }
