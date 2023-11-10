@@ -1,42 +1,97 @@
 package org.vijayi.commenting.comment.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.CreationTimestamp;
 import org.vijayi.commenting.user.repository.model.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Comment")
+@Table(name = "Comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "id")
     @JsonProperty
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "message")
+    @NotNull(message = "message cannot be null")
     @JsonProperty
     private String message;
 
     @Column(
             name = "Date_Time",
-            nullable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+            nullable = false
     )
+    @CreationTimestamp
+    @NotNull(message = "date_time cannot be null")
     @JsonProperty
     private Timestamp dateTime;
 
+    //    @ManyToOne
+    @Column(name = "posted_by")
+    @NotNull(message = "posted_by cannot be null")
+//    @JoinColumn(
+//            name = "POSTED_BY",
+//            referencedColumnName = "ID",
+//            insertable = false,
+//            updatable = false
+//    )
+    private Long postedBy;
+
     @ManyToOne
     @JoinColumn(name = "POSTED_BY", referencedColumnName = "ID", insertable = false, updatable = false)
-    private User postedBy;
+    private User userPostedBy;
+
+    //    @ManyToOne
+    @Column(name = "posted_for")
+    @NotNull(message = "posted_for cannot be null")
+//    @JoinColumn(
+//            name = "POSTED_FOR",
+//            referencedColumnName = "ID",
+//            insertable = false,
+//            updatable = false
+//    )
+    private Long postedFor;
 
     @ManyToOne
     @JoinColumn(name = "POSTED_FOR", referencedColumnName = "ID", insertable = false, updatable = false)
-    private User postedFor;
+    private User userPostedFor;
 
-    public Comment(Long id, String message, Timestamp dateTime, User postedBy, User postedFor) {
+    public User getUserPostedBy() {
+        return userPostedBy;
+    }
+
+    public void setUserPostedBy(User userPostedBy) {
+        this.userPostedBy = userPostedBy;
+    }
+
+    public User getUserPostedFor() {
+        return userPostedFor;
+    }
+
+    public void setUserPostedFor(User userPostedFor) {
+        this.userPostedFor = userPostedFor;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                "," + "\n" + " message='" + message + '\'' +
+                "," + "\n" + " dateTime=" + dateTime +
+                "," + "\n" + " postedBy=" + postedBy +
+                "," + "\n" + " userPostedBy=" + userPostedBy +
+                "," + "\n" + " postedFor=" + postedFor +
+                "," + "\n" + " userPostedFor=" + userPostedFor +
+                '}';
+    }
+
+    public Comment(Long id, String message, Timestamp dateTime, Long postedBy, Long postedFor) {
         this.id = id;
         this.message = message;
         this.dateTime = dateTime;
@@ -67,19 +122,19 @@ public class Comment {
         this.dateTime = dateTime;
     }
 
-    public User getPostedBy() {
+    public Long getPostedBy() {
         return postedBy;
     }
 
-    public void setPostedBy(User postedBy) {
+    public void setPostedBy(Long postedBy) {
         this.postedBy = postedBy;
     }
 
-    public User getPostedFor() {
+    public Long getPostedFor() {
         return postedFor;
     }
 
-    public void setPostedFor(User postedFor) {
+    public void setPostedFor(Long postedFor) {
         this.postedFor = postedFor;
     }
 
@@ -93,17 +148,13 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, message, dateTime, postedBy, postedFor);
+        return Objects.hash(
+                id,
+                message,
+                dateTime,
+                postedBy,
+                postedFor
+        );
     }
 
-    @Override
-    public String toString() {
-        return "Comment{" + "\n" +
-                "id=" + id + "\n" +
-                ", message='" + message + '\'' + "\n" +
-                ", dateTime=" + dateTime + "\n" +
-                ", postedBy=" + postedBy + "\n" +
-                ", postedFor=" + postedFor + "\n" +
-                '}';
-    }
 }

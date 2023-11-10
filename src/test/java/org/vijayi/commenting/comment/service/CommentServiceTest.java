@@ -1,6 +1,10 @@
 package org.vijayi.commenting.comment.service;
 
 import org.junit.jupiter.api.Test;
+import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
+import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
+import org.vijayi.commenting.comment.repository.CommentRepository;
+import org.vijayi.commenting.comment.repository.model.Comment;
 import org.vijayi.commenting.comment.view.model.request.AddCommentRequestBody;
 import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
 import org.vijayi.commenting.user.exceptions.UnableToAddUserToDbException;
@@ -34,7 +38,7 @@ class CommentServiceTest {
     }
 
     @Test
-    public void shouldAddCommentWhenUserNotInDb() throws InvalidUserNameException, UserNotInDbException {
+    public void shouldNotAddCommentWhenUserNotInDb() throws InvalidUserNameException, UserNotInDbException {
         User mockUser = mock(User.class);
         AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
         UserService mockUserService = mock(UserService.class);
@@ -59,7 +63,7 @@ class CommentServiceTest {
     }
 
     @Test
-    public void shouldAddCommentWhenUnableToAddInDb() throws InvalidUserNameException, UserNotInDbException {
+    public void shouldNotAddCommentWhenUnableToAddInDb() throws InvalidUserNameException, UserNotInDbException {
         User mockUser = mock(User.class);
         AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
         UserService mockUserService = mock(UserService.class);
@@ -77,8 +81,7 @@ class CommentServiceTest {
                 UnableToAddUserToDbException.class,
                 () -> new CommentService(mockUserService).addComment(mockAddCommentRequestBody)
         );
-        System.out.println(unableToAddUserToDbException.getMessage());
-//        assertEquals("PostedBy: user not found", unableToAddUserToDbException.getMessage());
+        assertEquals("PostedFor: unable to add user to db", unableToAddUserToDbException.getMessage());
 
         verify(mockUserService).isValidUserName(mockAddCommentRequestBody.getPostedBy());
         assertTrue(mockUserService.isValidUserName(mockUser));
@@ -88,26 +91,140 @@ class CommentServiceTest {
     }
 
     @Test
-    public void shouldAddComment() throws InvalidUserNameException, UserNotInDbException, UnableToAddUserToDbException {
+    public void shouldNotAddCommentWhenUserAlreadyInDbAndUnableToAddCommentInDb() throws InvalidUserNameException, UserNotInDbException {
         User mockUser = mock(User.class);
         AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
         UserService mockUserService = mock(UserService.class);
+        CommentRepository mockCommentRepository = mock(CommentRepository.class);
+
         when(mockAddCommentRequestBody.getPostedBy()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getPostedFor()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getMessage()).thenReturn("Dummy Message.");
+
         when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
         when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
         when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
-        when(mockUserService.addUserToDb(any())).thenReturn(mockUser);
+        when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
+        when(mockCommentRepository.save(any())).thenReturn(null);
 
         verify(mockAddCommentRequestBody, times(2)).getPostedBy();
         assertEquals(mockUser, mockAddCommentRequestBody.getPostedBy());
 
-        CommentService commentService = new CommentService(mockUserService);
-        commentService.addComment(mockAddCommentRequestBody);
+        UnableToAddCommentInDbException unableToAddCommentInDb = assertThrows(
+                UnableToAddCommentInDbException.class,
+                () -> new CommentService(
+                        mockCommentRepository, mockUserService
+                ).addComment(mockAddCommentRequestBody)
+        );
+        assertEquals("failed to add comment in db", unableToAddCommentInDb.getMessage());
 
-        verify(mockUserService).isValidUserName(mockAddCommentRequestBody.getPostedBy());
+        verify(mockUserService, times(2)).isValidUserName(mockAddCommentRequestBody.getPostedBy());
         assertTrue(mockUserService.isValidUserName(mockUser));
 
-        verify(mockUserService).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
+        verify(mockUserService, times(2)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
+        assertTrue(mockUserService.isAvailableInDb(mockUser));
+    }
+
+    @Test
+    public void shouldNotAddCommentWhenMessageIsEmpty() throws InvalidUserNameException, UserNotInDbException, UnableToAddUserToDbException, UnableToAddCommentInDbException, EmptyMessageException {
+        User mockUser = mock(User.class);
+        AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
+        UserService mockUserService = mock(UserService.class);
+        CommentRepository mockCommentRepository = mock(CommentRepository.class);
+        Comment mockComment = mock(Comment.class);
+
+        when(mockAddCommentRequestBody.getPostedBy()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getPostedFor()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getMessage()).thenReturn("");
+
+        when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
+        when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
+        when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
+        when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
+        when(mockCommentRepository.save(any())).thenReturn(mockComment);
+
+        verify(mockAddCommentRequestBody, times(2)).getPostedBy();
+        assertEquals(mockUser, mockAddCommentRequestBody.getPostedBy());
+
+        EmptyMessageException emptyMessageException = assertThrows(
+                EmptyMessageException.class,
+                () -> new CommentService(
+                        mockCommentRepository, mockUserService
+                ).addComment(mockAddCommentRequestBody)
+        );
+        assertEquals("Message is empty or null.", emptyMessageException.getMessage());
+
+        verify(mockUserService, times(2)).isValidUserName(mockAddCommentRequestBody.getPostedBy());
+        assertTrue(mockUserService.isValidUserName(mockUser));
+
+        verify(mockUserService, times(2)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
+        assertTrue(mockUserService.isAvailableInDb(mockUser));
+    }
+
+    @Test
+    public void shouldNotAddCommentWhenMessageIsNull() throws InvalidUserNameException, UserNotInDbException, UnableToAddUserToDbException, UnableToAddCommentInDbException, EmptyMessageException {
+        User mockUser = mock(User.class);
+        AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
+        UserService mockUserService = mock(UserService.class);
+        CommentRepository mockCommentRepository = mock(CommentRepository.class);
+        Comment mockComment = mock(Comment.class);
+
+        when(mockAddCommentRequestBody.getPostedBy()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getPostedFor()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getMessage()).thenReturn(null);
+
+        when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
+        when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
+        when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
+        when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
+        when(mockCommentRepository.save(any())).thenReturn(mockComment);
+
+        verify(mockAddCommentRequestBody, times(2)).getPostedBy();
+        assertEquals(mockUser, mockAddCommentRequestBody.getPostedBy());
+
+        EmptyMessageException emptyMessageException = assertThrows(
+                EmptyMessageException.class,
+                () -> new CommentService(
+                        mockCommentRepository, mockUserService
+                ).addComment(mockAddCommentRequestBody)
+        );
+        assertEquals("Message is empty or null.", emptyMessageException.getMessage());
+
+        verify(mockUserService, times(2)).isValidUserName(mockAddCommentRequestBody.getPostedBy());
+        assertTrue(mockUserService.isValidUserName(mockUser));
+
+        verify(mockUserService, times(2)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
+        assertTrue(mockUserService.isAvailableInDb(mockUser));
+    }
+
+    @Test
+    public void shouldAddComment() throws InvalidUserNameException, UserNotInDbException, UnableToAddUserToDbException, UnableToAddCommentInDbException, EmptyMessageException {
+        User mockUser = mock(User.class);
+        AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
+        UserService mockUserService = mock(UserService.class);
+        CommentRepository mockCommentRepository = mock(CommentRepository.class);
+        Comment mockComment = mock(Comment.class);
+
+        when(mockAddCommentRequestBody.getPostedBy()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getPostedFor()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getMessage()).thenReturn("Dummy Message.");
+
+        when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
+        when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
+        when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
+        when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
+        when(mockCommentRepository.save(any())).thenReturn(mockComment);
+
+        verify(mockAddCommentRequestBody, times(2)).getPostedBy();
+        assertEquals(mockUser, mockAddCommentRequestBody.getPostedBy());
+
+        CommentService commentService = new CommentService(mockCommentRepository, mockUserService);
+        commentService.addComment(mockAddCommentRequestBody);
+
+        verify(mockUserService, times(2)).isValidUserName(mockAddCommentRequestBody.getPostedBy());
+        assertTrue(mockUserService.isValidUserName(mockUser));
+
+        verify(mockUserService, times(2)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
         assertTrue(mockUserService.isAvailableInDb(mockUser));
     }
 

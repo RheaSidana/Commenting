@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
+import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
 import org.vijayi.commenting.comment.repository.model.Comment;
 import org.vijayi.commenting.comment.service.CommentService;
 import org.vijayi.commenting.comment.view.model.request.AddCommentRequestBody;
-import org.vijayi.commenting.comment.view.model.response.AddCommentResponseBody;
+import org.vijayi.commenting.comment.view.model.response.AddCommentResponseBodyError;
+import org.vijayi.commenting.comment.view.model.response.AddCommentResponseBodySuccess;
 import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
 import org.vijayi.commenting.user.exceptions.UnableToAddUserToDbException;
 import org.vijayi.commenting.user.exceptions.UserNotInDbException;
@@ -32,7 +35,7 @@ public class CommentController {
         try {
             comment = commentService.addComment(addCommentRequestBody);
         } catch (InvalidUserNameException ex) {
-            AddCommentResponseBody addCommentResponseBody = new AddCommentResponseBody();
+            AddCommentResponseBodyError addCommentResponseBody = new AddCommentResponseBodyError();
             addCommentResponseBody.setMessage("Invalid Request");
             addCommentResponseBody.setError(ex.getMessage());
             return ResponseEntity.status(
@@ -41,7 +44,7 @@ public class CommentController {
                     addCommentResponseBody
             );
         } catch (UserNotInDbException ex) {
-            AddCommentResponseBody addCommentResponseBody = new AddCommentResponseBody();
+            AddCommentResponseBodyError addCommentResponseBody = new AddCommentResponseBodyError();
             addCommentResponseBody.setMessage("Invalid Request");
             addCommentResponseBody.setError(ex.getMessage());
             return ResponseEntity.status(
@@ -50,7 +53,25 @@ public class CommentController {
                     addCommentResponseBody
             );
         } catch (UnableToAddUserToDbException ex) {
-            AddCommentResponseBody addCommentResponseBody = new AddCommentResponseBody();
+            AddCommentResponseBodyError addCommentResponseBody = new AddCommentResponseBodyError();
+            addCommentResponseBody.setMessage("Invalid Request");
+            addCommentResponseBody.setError(ex.getMessage());
+            return ResponseEntity.status(
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            ).body(
+                    addCommentResponseBody
+            );
+        } catch (UnableToAddCommentInDbException ex) {
+            AddCommentResponseBodyError addCommentResponseBody = new AddCommentResponseBodyError();
+            addCommentResponseBody.setMessage("Invalid Request");
+            addCommentResponseBody.setError(ex.getMessage());
+            return ResponseEntity.status(
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            ).body(
+                    addCommentResponseBody
+            );
+        } catch(EmptyMessageException ex){
+            AddCommentResponseBodyError addCommentResponseBody = new AddCommentResponseBodyError();
             addCommentResponseBody.setMessage("Invalid Request");
             addCommentResponseBody.setError(ex.getMessage());
             return ResponseEntity.status(
@@ -63,7 +84,7 @@ public class CommentController {
         return ResponseEntity.status(
                 HttpStatus.CREATED
         ).body(
-                comment
+                new AddCommentResponseBodySuccess(comment)
         );
     }
 }
