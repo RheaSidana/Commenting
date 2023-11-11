@@ -3,6 +3,7 @@ package org.vijayi.commenting.comment.view;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.datasource.UserCredentialsDataSourceAdapter;
 import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
 import org.vijayi.commenting.comment.exceptions.InvalidRequestException;
 import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
@@ -15,6 +16,12 @@ import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
 import org.vijayi.commenting.user.exceptions.UnableToAddUserToDbException;
 import org.vijayi.commenting.user.exceptions.UserNotInDbException;
 import org.vijayi.commenting.user.repository.model.User;
+import org.vijayi.commenting.user.service.UserService;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -239,5 +246,68 @@ class CommentControllerTest {
                 () -> mockCommentService.showComments(1, Long.getLong("1"), new User())
         );
         assertEquals(exceptionMessage, userNotInDbException.getMessage());
+    }
+
+    @Test
+    public void shouldNotShowCommentsWhenInvalidPageNumber() throws UserNotInDbException, InvalidRequestException {
+        CommentService mockCommentService = mock(CommentService.class);
+
+        String exceptionMessage = "Exception";
+
+        User mockUser = mock(User.class);
+        when(mockUser.getId()).thenReturn(1L);
+        when(mockUser.getName()).thenReturn("name");
+
+        UserService mockUserService = mock(UserService.class);
+        when(mockUserService.isValidUserId(1L)).thenReturn(mockUser);
+
+        when(mockCommentService.showComments(-1, 1L, mockUser)).thenThrow(
+                new InvalidRequestException(exceptionMessage)
+        );
+
+        ResponseBodyError invalidRequest = new ResponseBodyError();
+        invalidRequest.setMessage("Invalid Request");
+        invalidRequest.setError(exceptionMessage);
+
+        CommentController commentController = new CommentController(mockCommentService);
+        ResponseEntity<Object> objectResponseEntity = commentController.showComments(1L, -1, mockUser);
+
+        assertTrue(objectResponseEntity.getBody() instanceof ResponseBodyError);
+        assertEquals(HttpStatus.BAD_REQUEST, objectResponseEntity.getStatusCode());
+
+        InvalidRequestException invalidRequestException = assertThrows(
+                InvalidRequestException.class,
+                () -> mockCommentService.showComments(-1, 1L, mockUser)
+        );
+        assertEquals(exceptionMessage, invalidRequestException.getMessage());
+    }
+
+    @Test
+    public void shouldShowComments() throws UserNotInDbException, InvalidRequestException {
+        CommentService mockCommentService = mock(CommentService.class);
+
+        String exceptionMessage = "Exception";
+
+        User mockUser = mock(User.class);
+        when(mockUser.getId()).thenReturn(1L);
+        when(mockUser.getName()).thenReturn("name");
+
+        UserService mockUserService = mock(UserService.class);
+        when(mockUserService.isValidUserId(1L)).thenReturn(mockUser);
+
+        List<Comment> expectedComments = Arrays.asList(
+                new Comment(1L, "Test Comment 1", Timestamp.from(Instant.now()), mockUser.getId(), mockUser.getId()),
+                new Comment(2L, "Test Comment 2", Timestamp.from(Instant.now()), mockUser.getId(), mockUser.getId())
+        );
+        when(mockCommentService.showComments(1, 1L, mockUser)).thenReturn(
+                expectedComments
+        );
+
+        CommentController commentController = new CommentController(mockCommentService);
+        ResponseEntity<Object> objectResponseEntity = commentController.showComments(1L, 1, mockUser);
+
+        assertFalse(objectResponseEntity.getBody() instanceof ResponseBodyError);
+        assertEquals(HttpStatus.OK, objectResponseEntity.getStatusCode());
+        assertEquals(expectedComments, objectResponseEntity.getBody());
     }
 }

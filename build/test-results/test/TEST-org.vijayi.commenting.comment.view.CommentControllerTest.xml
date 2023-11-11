@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.vijayi.commenting.comment.view.CommentControllerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2023-11-11T18:25:22" hostname="DESKTOP-BFNHOD6" time="0.385">
+<testsuite name="org.vijayi.commenting.comment.view.CommentControllerTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2023-11-11T21:06:10" hostname="DESKTOP-BFNHOD6" time="0.784">
   <properties/>
-  <testcase name="shouldNotAddCommentWhenPostedByNotFoundInDb()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.285"/>
-  <testcase name="shouldNotAddCommentWhenInvalidUserNameException()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.013"/>
-  <testcase name="shouldNotAddCommentWhenUnableToAddCommentInDb()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.003"/>
-  <testcase name="shouldNotAddCommentWhenMessageIsEmptyOrNull()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.014"/>
-  <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.014"/>
-  <testcase name="shouldNotShowCommentsWhenInvalidRequest()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.014"/>
-  <testcase name="shouldNotShowCommentsWhenUserNotInDbException()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.014"/>
-  <testcase name="shouldNotAddCommentWhenPostedForUnableToAddInDb()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.016"/>
+  <testcase name="shouldNotAddCommentWhenPostedByNotFoundInDb()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.38"/>
+  <testcase name="shouldNotShowCommentsWhenInvalidPageNumber()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.053"/>
+  <testcase name="shouldNotAddCommentWhenInvalidUserNameException()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.018"/>
+  <testcase name="shouldNotAddCommentWhenUnableToAddCommentInDb()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.016"/>
+  <testcase name="shouldShowComments()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.034"/>
+  <testcase name="shouldNotAddCommentWhenMessageIsEmptyOrNull()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.015"/>
+  <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.02"/>
+  <testcase name="shouldNotShowCommentsWhenInvalidRequest()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.08"/>
+  <testcase name="shouldNotShowCommentsWhenUserNotInDbException()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.017"/>
+  <testcase name="shouldNotAddCommentWhenPostedForUnableToAddInDb()" classname="org.vijayi.commenting.comment.view.CommentControllerTest" time="0.017"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

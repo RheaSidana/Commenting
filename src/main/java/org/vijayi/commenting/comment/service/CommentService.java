@@ -1,6 +1,10 @@
 package org.vijayi.commenting.comment.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
 import org.vijayi.commenting.comment.exceptions.InvalidRequestException;
@@ -67,7 +71,27 @@ public class CommentService {
             UserNotInDbException {
         isValidRequest(id, loggedInUser);
         isValidUser(id, loggedInUser);
-        return null;
+        isPageValid(page);
+
+        List<Comment> comments = fetchAllComments(id, page);
+        return comments;
+    }
+
+    private boolean isPageValid(int page) throws InvalidRequestException {
+        if(page <= 0){
+            throw new InvalidRequestException("Invalid Page number provided");
+        }
+        return true;
+    }
+
+    private List<Comment> fetchAllComments(Long id, int page) {
+        int size = 2;
+//        int size = 5;
+        Sort sort = Sort.by("dateTime").descending();
+        Pageable pageable = PageRequest.of(page-1, size, sort);
+        Page<Comment> pageComments = commentRepository.findAllByPostedFor(id, pageable);
+
+        return pageComments.getContent();
     }
 
     private boolean isValidUser(Long id, User loggedInUser) throws UserNotInDbException {

@@ -1,6 +1,9 @@
 package org.vijayi.commenting.comment.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
 import org.vijayi.commenting.comment.exceptions.InvalidRequestException;
 import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
@@ -13,6 +16,10 @@ import org.vijayi.commenting.user.exceptions.UserNotInDbException;
 import org.vijayi.commenting.user.repository.model.User;
 import org.vijayi.commenting.user.service.UserService;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -262,14 +269,55 @@ class CommentServiceTest {
     }
 
     @Test
+    public void shouldShowCommentsReturnEmptyListWhenNoCommentIsPresent() throws UserNotInDbException, InvalidRequestException {
+        User user = new User(1L, "dummy");
+        UserService mockUserService = mock(UserService.class);
+        when(mockUserService.isValidUserId(any())).thenReturn(user);
+        CommentRepository mockCommentRepository = mock(CommentRepository.class);
+        List<Comment> comments = new ArrayList<>();
+        Page<Comment> page = new PageImpl<>(comments);
+        when(mockCommentRepository.findAllByPostedFor(any(), any())).thenReturn(page);
+        CommentService commentService = new CommentService(mockCommentRepository, mockUserService);
+
+        List<Comment> commentsPostedFor = commentService.showComments(1, 1L, user);
+
+        assertEquals(new ArrayList<Comment>(), commentsPostedFor);
+    }
+
+    @Test
+    public void shouldNotShowCommentsWhenInvalidPageNumber() throws UserNotInDbException, InvalidRequestException {
+        User user = new User(1L, "dummy");
+        UserService mockUserService = mock(UserService.class);
+        when(mockUserService.isValidUserId(1L)).thenReturn(user);
+        CommentService commentService = new CommentService(mockUserService);
+
+        InvalidRequestException invalidRequestException = assertThrows(
+                InvalidRequestException.class,
+                () -> commentService.showComments(-1, 1L, user)
+        );
+
+        String exceptionMessage = "Invalid Page number provided";
+        assertEquals(exceptionMessage, invalidRequestException.getMessage());
+    }
+
+    @Test
     public void shouldShowComments() throws UserNotInDbException, InvalidRequestException {
         User user = new User(1L, "dummy");
         UserService mockUserService = mock(UserService.class);
         when(mockUserService.isValidUserId(any())).thenReturn(user);
-        CommentService commentService = new CommentService(mockUserService);
+        CommentRepository mockCommentRepository = mock(CommentRepository.class);
+        List<Comment> expectedComments = Arrays.asList(
+                new Comment(1L, "Test Comment 1", Timestamp.from(Instant.now()), user.getId(), user.getId()),
+                new Comment(2L, "Test Comment 2", Timestamp.from(Instant.now()), user.getId(), user.getId())
+        );
+        Page<Comment> page = new PageImpl<>(expectedComments);
+        when(mockCommentRepository.findAllByPostedFor(any(), any())).thenReturn(page);
+        CommentService commentService = new CommentService(mockCommentRepository, mockUserService);
 
-        List<Comment> comments = commentService.showComments(1, 1L, user);
+        List<Comment> commentsPostedFor = commentService.showComments(1, 1L, user);
 
-        assertNull(comments);
+        assertNotNull(commentsPostedFor);
+        assertEquals(expectedComments.size(), commentsPostedFor.size());
+        assertEquals(expectedComments, commentsPostedFor);
     }
 }
