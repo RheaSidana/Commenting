@@ -3,6 +3,7 @@ package org.vijayi.commenting.comment.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
+import org.vijayi.commenting.comment.exceptions.InvalidRequestException;
 import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
 import org.vijayi.commenting.comment.repository.CommentRepository;
 import org.vijayi.commenting.comment.repository.model.Comment;
@@ -16,6 +17,7 @@ import org.vijayi.commenting.user.service.UserService;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -52,17 +54,48 @@ public class CommentService {
             return new Comment();
         }
 
+        Comment comment = newComment(
+                addCommentRequestBody.getMessage(),
+                postedBy,
+                postedFor
+        );
+
+        return addToDb(comment);
+    }
+
+    public List<Comment> showComments(int page, Long id, User loggedInUser) throws InvalidRequestException,
+            UserNotInDbException {
+        isValidRequest(id, loggedInUser);
+        isValidUser(id, loggedInUser);
+        return null;
+    }
+
+    private boolean isValidUser(Long id, User loggedInUser) throws UserNotInDbException {
+        User validUser = userService.isValidUserId(id);
+        if(!validUser.equals(loggedInUser)){
+            throw new UserNotInDbException("User is not present in the db.");
+        }
+
+        return false;
+    }
+
+    private boolean isValidRequest(Long id, User loggedInUser) throws InvalidRequestException {
+        if(id != loggedInUser.getId()){
+            throw new InvalidRequestException("User does not have access to comments.");
+        }
+        return true;
+    }
+
+    private Comment newComment(String message, User postedBy, User postedFor){
         Comment comment = new Comment();
         comment.setPostedBy(postedBy.getId());
         comment.setUserPostedBy(postedBy);
         comment.setPostedFor(postedFor.getId());
         comment.setUserPostedFor(postedFor);
-        comment.setMessage(addCommentRequestBody.getMessage());
+        comment.setMessage(message);
         comment.setDateTime(Timestamp.from(Instant.now()));
 
-        System.out.println(comment);
-
-        return addToDb(comment);
+        return comment;
     }
 
     private boolean isMessageEmpty(AddCommentRequestBody addCommentRequestBody) throws EmptyMessageException {

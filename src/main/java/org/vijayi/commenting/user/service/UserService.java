@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.vijayi.commenting.user.repository.UserRepository;
 import org.vijayi.commenting.user.repository.model.User;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -36,5 +38,12 @@ public class UserService {
 
         User userCreated = userRepository.save(userToAddInDb);
         return userCreated;
+    }
+
+    public User isValidUserId(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent())
+            return user.get();
+        return null;
     }
 }

@@ -23,6 +23,10 @@ public class User {
         this.name = name;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public User() {}
 
     public Long getId() {

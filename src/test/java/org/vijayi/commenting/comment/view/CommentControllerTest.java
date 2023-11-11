@@ -4,15 +4,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
+import org.vijayi.commenting.comment.exceptions.InvalidRequestException;
 import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
 import org.vijayi.commenting.comment.repository.model.Comment;
 import org.vijayi.commenting.comment.service.CommentService;
 import org.vijayi.commenting.comment.view.model.request.AddCommentRequestBody;
-import org.vijayi.commenting.comment.view.model.response.AddCommentResponseBodyError;
+import org.vijayi.commenting.comment.view.model.response.ResponseBodyError;
 import org.vijayi.commenting.comment.view.model.response.AddCommentResponseBodySuccess;
 import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
 import org.vijayi.commenting.user.exceptions.UnableToAddUserToDbException;
 import org.vijayi.commenting.user.exceptions.UserNotInDbException;
+import org.vijayi.commenting.user.repository.model.User;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,7 +30,7 @@ class CommentControllerTest {
         String exceptionMessage = "Exception";
         when(mockCommentService.addComment(mockAddCommentRequestBody)).
                 thenThrow(new InvalidUserNameException(exceptionMessage));
-        AddCommentResponseBodyError invalidRequest = new AddCommentResponseBodyError();
+        ResponseBodyError invalidRequest = new ResponseBodyError();
         invalidRequest.setMessage("Invalid Request");
         invalidRequest.setError(exceptionMessage);
 
@@ -57,7 +59,7 @@ class CommentControllerTest {
         String exceptionMessage = "Exception";
         when(mockCommentService.addComment(mockAddCommentRequestBody)).
                 thenThrow(new UserNotInDbException(exceptionMessage));
-        AddCommentResponseBodyError invalidRequest = new AddCommentResponseBodyError();
+        ResponseBodyError invalidRequest = new ResponseBodyError();
         invalidRequest.setMessage("Invalid Request");
         invalidRequest.setError(exceptionMessage);
 
@@ -86,7 +88,7 @@ class CommentControllerTest {
         String exceptionMessage = "Exception";
         when(mockCommentService.addComment(mockAddCommentRequestBody)).
                 thenThrow(new UnableToAddCommentInDbException(exceptionMessage));
-        AddCommentResponseBodyError invalidRequest = new AddCommentResponseBodyError();
+        ResponseBodyError invalidRequest = new ResponseBodyError();
         invalidRequest.setMessage("Invalid Request");
         invalidRequest.setError(exceptionMessage);
 
@@ -117,7 +119,7 @@ class CommentControllerTest {
         String exceptionMessage = "Exception";
         when(mockCommentService.addComment(mockAddCommentRequestBody)).
                 thenThrow(new EmptyMessageException(exceptionMessage));
-        AddCommentResponseBodyError invalidRequest = new AddCommentResponseBodyError();
+        ResponseBodyError invalidRequest = new ResponseBodyError();
         invalidRequest.setMessage("Invalid Request");
         invalidRequest.setError(exceptionMessage);
 
@@ -148,7 +150,7 @@ class CommentControllerTest {
         String exceptionMessage = "Exception";
         when(mockCommentService.addComment(mockAddCommentRequestBody)).
                 thenThrow(new UnableToAddUserToDbException(exceptionMessage));
-        AddCommentResponseBodyError invalidRequest = new AddCommentResponseBodyError();
+        ResponseBodyError invalidRequest = new ResponseBodyError();
         invalidRequest.setMessage("Invalid Request");
         invalidRequest.setError(exceptionMessage);
 
@@ -167,7 +169,9 @@ class CommentControllerTest {
     }
 
     @Test
-    public void shouldAddComment() throws InvalidUserNameException, UserNotInDbException, UnableToAddUserToDbException, UnableToAddCommentInDbException, EmptyMessageException {
+    public void shouldAddComment() throws InvalidUserNameException, UserNotInDbException,
+            UnableToAddUserToDbException, UnableToAddCommentInDbException,
+            EmptyMessageException {
         // arrange
         AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
         CommentService mockCommentService = mock(CommentService.class);
@@ -187,5 +191,53 @@ class CommentControllerTest {
         verify(mockCommentService).addComment(mockAddCommentRequestBody);
         Comment comment = mockCommentService.addComment(mockAddCommentRequestBody);
         assertEquals(mockComment, comment);
+    }
+
+    @Test
+    public void shouldNotShowCommentsWhenInvalidRequest() throws UserNotInDbException, InvalidRequestException {
+        CommentService mockCommentService = mock(CommentService.class);
+        String exceptionMessage = "Exception";
+        when(mockCommentService.showComments(1, Long.getLong("1"), new User())).thenThrow(
+                new InvalidRequestException(exceptionMessage)
+        );
+        ResponseBodyError invalidRequest = new ResponseBodyError();
+        invalidRequest.setMessage("Invalid Request");
+        invalidRequest.setError(exceptionMessage);
+
+        CommentController commentController = new CommentController(mockCommentService);
+        ResponseEntity<Object> objectResponseEntity = commentController.showComments(Long.getLong("1"), 1, new User());
+
+        assertTrue(objectResponseEntity.getBody() instanceof ResponseBodyError);
+        assertEquals(HttpStatus.BAD_REQUEST, objectResponseEntity.getStatusCode());
+
+        InvalidRequestException invalidRequestException = assertThrows(
+                InvalidRequestException.class,
+                () -> mockCommentService.showComments(1, Long.getLong("1"), new User())
+        );
+        assertEquals(exceptionMessage, invalidRequestException.getMessage());
+    }
+
+    @Test
+    public void shouldNotShowCommentsWhenUserNotInDbException() throws UserNotInDbException, InvalidRequestException {
+        CommentService mockCommentService = mock(CommentService.class);
+        String exceptionMessage = "Exception";
+        when(mockCommentService.showComments(1, Long.getLong("1"), new User())).thenThrow(
+                new UserNotInDbException(exceptionMessage)
+        );
+        ResponseBodyError invalidRequest = new ResponseBodyError();
+        invalidRequest.setMessage("Invalid Request");
+        invalidRequest.setError(exceptionMessage);
+
+        CommentController commentController = new CommentController(mockCommentService);
+        ResponseEntity<Object> objectResponseEntity = commentController.showComments(Long.getLong("1"), 1, new User());
+
+        assertTrue(objectResponseEntity.getBody() instanceof ResponseBodyError);
+        assertEquals(HttpStatus.BAD_REQUEST, objectResponseEntity.getStatusCode());
+
+        UserNotInDbException userNotInDbException = assertThrows(
+                UserNotInDbException.class,
+                () -> mockCommentService.showComments(1, Long.getLong("1"), new User())
+        );
+        assertEquals(exceptionMessage, userNotInDbException.getMessage());
     }
 }

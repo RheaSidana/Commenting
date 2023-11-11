@@ -2,6 +2,7 @@ package org.vijayi.commenting.comment.service;
 
 import org.junit.jupiter.api.Test;
 import org.vijayi.commenting.comment.exceptions.EmptyMessageException;
+import org.vijayi.commenting.comment.exceptions.InvalidRequestException;
 import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
 import org.vijayi.commenting.comment.repository.CommentRepository;
 import org.vijayi.commenting.comment.repository.model.Comment;
@@ -11,6 +12,8 @@ import org.vijayi.commenting.user.exceptions.UnableToAddUserToDbException;
 import org.vijayi.commenting.user.exceptions.UserNotInDbException;
 import org.vijayi.commenting.user.repository.model.User;
 import org.vijayi.commenting.user.service.UserService;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -228,5 +231,45 @@ class CommentServiceTest {
         assertTrue(mockUserService.isAvailableInDb(mockUser));
     }
 
+    @Test
+    public void shouldNotShowCommentsWhenInvalidRequest() throws UserNotInDbException, InvalidRequestException {
+        User user = new User(1L, "dummy");
+        CommentService commentService = new CommentService();
 
+        InvalidRequestException invalidRequestException = assertThrows(
+                InvalidRequestException.class,
+                () -> commentService.showComments(1, 2L, user)
+        );
+
+        String exceptionMessage = "User does not have access to comments.";
+        assertEquals(exceptionMessage, invalidRequestException.getMessage());
+    }
+
+    @Test
+    public void shouldNotShowCommentsWhenInvalidUser() throws UserNotInDbException, InvalidRequestException {
+        User user = new User(1L, "dummy");
+        UserService mockUserService = mock(UserService.class);
+        when(mockUserService.isValidUserId(any())).thenReturn(new User());
+        CommentService commentService = new CommentService(mockUserService);
+
+        UserNotInDbException userNotInDbException = assertThrows(
+                UserNotInDbException.class,
+                () -> commentService.showComments(1, 1L, user)
+        );
+
+        String exceptionMessage = "User is not present in the db.";
+        assertEquals(exceptionMessage, userNotInDbException.getMessage());
+    }
+
+    @Test
+    public void shouldShowComments() throws UserNotInDbException, InvalidRequestException {
+        User user = new User(1L, "dummy");
+        UserService mockUserService = mock(UserService.class);
+        when(mockUserService.isValidUserId(any())).thenReturn(user);
+        CommentService commentService = new CommentService(mockUserService);
+
+        List<Comment> comments = commentService.showComments(1, 1L, user);
+
+        assertNull(comments);
+    }
 }

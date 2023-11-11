@@ -1,14 +1,0 @@
-Comment{id=null,
- message='Dummy Message.',
-& dateTime=2023-11-11 00:13:26.555668,
- postedBy=0,
-3 userPostedBy=Mock for User, hashCode: 1478621430,
- postedFor=0,
-5 userPostedFor=Mock for User, hashCode: 1478621430}
-Comment{id=null,
- message='Dummy Message.',
-' dateTime=2023-11-11 00:13:26.6436952,
- postedBy=0,
-3 userPostedBy=Mock for User, hashCode: 1000095838,
- postedFor=0,
-5 userPostedFor=Mock for User, hashCode: 1000095838}
