@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.vijayi.commenting.user.service.UserServiceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2023-11-11T21:06:11" hostname="DESKTOP-BFNHOD6" time="0.677">
+<testsuite name="org.vijayi.commenting.user.service.UserServiceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2023-11-12T13:24:53" hostname="DESKTOP-BFNHOD6" time="0.11">
   <properties/>
-  <testcase name="shouldNotIsValidUserNameWhenEmpty()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.014"/>
-  <testcase name="shouldIsAvailableInDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.568"/>
-  <testcase name="shouldNotAddUserToDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.017"/>
-  <testcase name="shouldAddUserToDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.003"/>
-  <testcase name="shouldIsAvailableInDbWhenNotInDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.02"/>
+  <testcase name="shouldNotIsValidUserNameWhenEmpty()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
+  <testcase name="shouldIsAvailableInDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.085"/>
+  <testcase name="shouldNotAddUserToDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.003"/>
+  <testcase name="shouldAddUserToDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.005"/>
+  <testcase name="shouldIsAvailableInDbWhenNotInDb()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.005"/>
   <testcase name="shouldIsValidUserName()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
   <testcase name="shouldNotIsValidUserNameWhenSpecialChar()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
-  <testcase name="shouldNotIsValidUserNameWhenHasNumber()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.005"/>
-  <testcase name="shouldNotIsValidUserNameWhenSymbol()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.004"/>
+  <testcase name="shouldNotIsValidUserNameWhenHasNumber()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.0"/>
+  <testcase name="shouldNotIsValidUserNameWhenSymbol()" classname="org.vijayi.commenting.user.service.UserServiceTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

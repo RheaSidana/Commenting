@@ -78,6 +78,7 @@ class CommentServiceTest {
         AddCommentRequestBody mockAddCommentRequestBody = mock(AddCommentRequestBody.class);
         UserService mockUserService = mock(UserService.class);
         when(mockAddCommentRequestBody.getPostedBy()).thenReturn(mockUser);
+        when(mockAddCommentRequestBody.getMessage()).thenReturn("message");
         when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
         when(mockUserService.isAvailableInDb(mockAddCommentRequestBody.getPostedBy())).thenReturn(true);
         when(mockUserService.isValidUserName(mockAddCommentRequestBody.getPostedFor())).thenReturn(true);
@@ -167,7 +168,7 @@ class CommentServiceTest {
         verify(mockUserService, times(2)).isValidUserName(mockAddCommentRequestBody.getPostedBy());
         assertTrue(mockUserService.isValidUserName(mockUser));
 
-        verify(mockUserService, times(2)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
+        verify(mockUserService, times(1)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
         assertTrue(mockUserService.isAvailableInDb(mockUser));
     }
 
@@ -203,7 +204,7 @@ class CommentServiceTest {
         verify(mockUserService, times(2)).isValidUserName(mockAddCommentRequestBody.getPostedBy());
         assertTrue(mockUserService.isValidUserName(mockUser));
 
-        verify(mockUserService, times(2)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
+        verify(mockUserService, times(1)).isAvailableInDb(mockAddCommentRequestBody.getPostedBy());
         assertTrue(mockUserService.isAvailableInDb(mockUser));
     }
 

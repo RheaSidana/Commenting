@@ -51,12 +51,12 @@ public class CommentService {
         User postedBy = getPostedByUser(addCommentRequestBody);
 
         isValidPostedForUserName(addCommentRequestBody);
-        User postedFor = getPostedForUser(addCommentRequestBody);
-
         boolean messageEmpty = isMessageEmpty(addCommentRequestBody);
         if(messageEmpty){
             return new Comment();
         }
+        User postedFor = getPostedForUser(addCommentRequestBody);
+
 
         Comment comment = newComment(
                 addCommentRequestBody.getMessage(),

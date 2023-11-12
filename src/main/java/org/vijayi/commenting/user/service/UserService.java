@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.vijayi.commenting.user.repository.UserRepository;
 import org.vijayi.commenting.user.repository.model.User;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -32,6 +33,7 @@ public class UserService {
         return userRepository.findByName(user.getName(), user.getId()).isPresent();
     }
 
+    @Transactional
     public User addUserToDb(User user){
         User userToAddInDb = new User();
         userToAddInDb.setName(user.getName());
