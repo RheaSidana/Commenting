@@ -32,30 +32,16 @@ public class Comment {
     @JsonProperty
     private Timestamp dateTime;
 
-    //    @ManyToOne
     @Column(name = "posted_by")
     @NotNull(message = "posted_by cannot be null")
-//    @JoinColumn(
-//            name = "POSTED_BY",
-//            referencedColumnName = "ID",
-//            insertable = false,
-//            updatable = false
-//    )
     private Long postedBy;
 
     @ManyToOne
     @JoinColumn(name = "POSTED_BY", referencedColumnName = "ID", insertable = false, updatable = false)
     private User userPostedBy;
 
-    //    @ManyToOne
     @Column(name = "posted_for")
     @NotNull(message = "posted_for cannot be null")
-//    @JoinColumn(
-//            name = "POSTED_FOR",
-//            referencedColumnName = "ID",
-//            insertable = false,
-//            updatable = false
-//    )
     private Long postedFor;
 
     @ManyToOne

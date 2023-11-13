@@ -1,5 +1,12 @@
 # Commenting
 
+<h1>Video Description: </h1>
+
+```
+https://drive.google.com/file/d/18cLvjD0Uz0CMX7LWjE5eS_KLN0AIYgUQ/view?usp=sharing
+```
+
+<h1>About: </h1>
 <p>
 Outlines the endpoints for a social media platform, 
 offering functionality to add comments and show comments.
@@ -68,4 +75,6 @@ create database commenting;
 ```
 
 <h3>6. API's </h3>
-<a href="https://documenter.getpostman.com/view/28378586/2s9YXk41xP">Postman Documentation</a>
+<a href="https://documenter.getpostman.com/view/28378586/2s9YXk41xP">
+Postman Documentation
+</a>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.vijayi.commenting.comment.service.CommentServiceTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2023-11-12T13:24:51" hostname="DESKTOP-BFNHOD6" time="1.841">
+<testsuite name="org.vijayi.commenting.comment.service.CommentServiceTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2023-11-12T14:57:54" hostname="DESKTOP-BFNHOD6" time="2.052">
   <properties/>
-  <testcase name="shouldNotShowCommentsWhenInvalidPageNumber()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="1.349"/>
-  <testcase name="shouldNotAddCommentWhenMessageIsEmpty()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.396"/>
-  <testcase name="shouldNotAddCommentWhenMessageIsNull()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.014"/>
-  <testcase name="shouldNotAddCommentWhenUnableToAddInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.013"/>
-  <testcase name="shouldNotShowCommentsWhenInvalidUser()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.003"/>
-  <testcase name="shouldNotAddCommentWhenInvalidUserName()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.004"/>
-  <testcase name="shouldShowComments()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.019"/>
+  <testcase name="shouldNotShowCommentsWhenInvalidPageNumber()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="1.439"/>
+  <testcase name="shouldNotAddCommentWhenMessageIsEmpty()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.493"/>
+  <testcase name="shouldNotAddCommentWhenMessageIsNull()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.021"/>
+  <testcase name="shouldNotAddCommentWhenUnableToAddInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.011"/>
+  <testcase name="shouldNotShowCommentsWhenInvalidUser()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.002"/>
+  <testcase name="shouldNotAddCommentWhenInvalidUserName()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.005"/>
+  <testcase name="shouldShowComments()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.027"/>
   <testcase name="shouldAddComment()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.011"/>
-  <testcase name="shouldNotShowCommentsWhenInvalidRequest()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.001"/>
-  <testcase name="shouldShowCommentsReturnEmptyListWhenNoCommentIsPresent()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.002"/>
-  <testcase name="shouldNotAddCommentWhenUserAlreadyInDbAndUnableToAddCommentInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.012"/>
-  <testcase name="shouldNotAddCommentWhenUserNotInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.007"/>
+  <testcase name="shouldNotShowCommentsWhenInvalidRequest()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.002"/>
+  <testcase name="shouldShowCommentsReturnEmptyListWhenNoCommentIsPresent()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.009"/>
+  <testcase name="shouldNotAddCommentWhenUserAlreadyInDbAndUnableToAddCommentInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.013"/>
+  <testcase name="shouldNotAddCommentWhenUserNotInDb()" classname="org.vijayi.commenting.comment.service.CommentServiceTest" time="0.008"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
