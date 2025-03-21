@@ -10,8 +10,8 @@ import org.vijayi.commenting.comment.exceptions.UnableToAddCommentInDbException;
 import org.vijayi.commenting.comment.repository.model.Comment;
 import org.vijayi.commenting.comment.service.CommentService;
 import org.vijayi.commenting.comment.view.model.request.AddCommentRequestBody;
-import org.vijayi.commenting.comment.view.model.response.ResponseBodyError;
 import org.vijayi.commenting.comment.view.model.response.AddCommentResponseBodySuccess;
+import org.vijayi.commenting.comment.view.model.response.ResponseBodyError;
 import org.vijayi.commenting.user.exceptions.InvalidUserNameException;
 import org.vijayi.commenting.user.exceptions.UnableToAddUserToDbException;
 import org.vijayi.commenting.user.exceptions.UserNotInDbException;
@@ -72,7 +72,7 @@ public class CommentController {
             ).body(
                     addCommentResponseBody
             );
-        } catch(EmptyMessageException ex){
+        } catch (EmptyMessageException ex) {
             ResponseBodyError addCommentResponseBody = new ResponseBodyError();
             addCommentResponseBody.setMessage("Invalid Request");
             addCommentResponseBody.setError(ex.getMessage());
@@ -93,13 +93,13 @@ public class CommentController {
     @GetMapping("/comment")
     public ResponseEntity<Object> showComments(
             @RequestParam(name = "id") Long id,
-            @RequestParam(name="page") int page,
+            @RequestParam(name = "page") int page,
             @RequestBody User loggedInUser
-    ){
+    ) {
         List<Comment> commentsOfPostedFor = null;
-        try{
+        try {
             commentsOfPostedFor = commentService.showComments(page, id, loggedInUser);
-        } catch (InvalidRequestException ex){
+        } catch (InvalidRequestException ex) {
             ResponseBodyError responseBodyError = new ResponseBodyError();
             responseBodyError.setMessage("Invalid Request");
             responseBodyError.setError(ex.getMessage());
@@ -108,7 +108,7 @@ public class CommentController {
             ).body(
                     responseBodyError
             );
-        } catch(UserNotInDbException ex){
+        } catch (UserNotInDbException ex) {
             ResponseBodyError responseBodyError = new ResponseBodyError();
             responseBodyError.setMessage("Invalid Request");
             responseBodyError.setError(ex.getMessage());
@@ -117,8 +117,7 @@ public class CommentController {
             ).body(
                     responseBodyError
             );
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new ResponseBodyError()
             );

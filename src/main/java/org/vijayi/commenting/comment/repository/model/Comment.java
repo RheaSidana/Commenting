@@ -129,7 +129,11 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id) && Objects.equals(message, comment.message) && Objects.equals(dateTime, comment.dateTime) && Objects.equals(postedBy, comment.postedBy) && Objects.equals(postedFor, comment.postedFor);
+        return Objects.equals(id, comment.id) &&
+                Objects.equals(message, comment.message) &&
+                Objects.equals(dateTime, comment.dateTime) &&
+                Objects.equals(postedBy, comment.postedBy) &&
+                Objects.equals(postedFor, comment.postedFor);
     }
 
     @Override
